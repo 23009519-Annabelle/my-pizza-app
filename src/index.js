@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
@@ -7,6 +7,7 @@ import "./index.css";
 import pizzaData from "./data.js";
 import { FaPizzaSlice, FaHome } from 'react-icons/fa';
 import { IoMdMenu, IoMdContact, IoIosInformationCircle } from "react-icons/io";
+
 
 // Main App Component
 function App() {
@@ -63,28 +64,35 @@ function Navbar() {
 
 // Menu Component
 function Menu() {
-  const numOfPizzas = pizzaData.length;
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPizzas = pizzaData.filter((pizza) =>
+    pizza.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="menu">
-      {numOfPizzas > 0 && (
-        <>
-          <em>Authentic Italian cuisine, all from our stone oven</em>
-          <h2>Our Menu</h2>
-          <div className="pizza-cards-container">
-            {pizzaData.map((pizza, index) => (
-              <PizzaCard
-                key={index}
-                name={pizza.name}
-                ingredients={pizza.ingredients}
-                price={pizza.price}
-                photoName={pizza.photoName}
-                soldOut={pizza.soldOut}
-              />
-            ))}
-          </div>
-        </>
-      )}
+      <input
+        type="text"
+        placeholder="Search for a pizza..."
+        className="search-bar"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <em>Authentic Italian cuisine, all from our stone oven</em>
+      <h2>Our Menu</h2>
+      <div className="pizza-cards-container">
+        {filteredPizzas.map((pizza, index) => (
+          <PizzaCard
+            key={index}
+            name={pizza.name}
+            ingredients={pizza.ingredients}
+            price={pizza.price}
+            photoName={pizza.photoName}
+            soldOut={pizza.soldOut}
+          />
+        ))}
+      </div>
     </div>
   );
 }
